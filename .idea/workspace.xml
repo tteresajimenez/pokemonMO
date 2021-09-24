@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="43ac77a3-5e2e-48ad-9c08-021465a6ca4e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pokemon_api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/pokemon_api/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pokemon_api/management/commands/pokemon.py" beforeDir="false" afterPath="$PROJECT_DIR$/pokemon_api/management/commands/pokemon.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pokemon_api/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/pokemon_api/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pokemon_api/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/pokemon_api/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

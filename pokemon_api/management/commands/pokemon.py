@@ -43,7 +43,6 @@ class Command(BaseCommand):
                 pprint.pprint(pokemon_info)
 
             # Adding information into de DB
-            count = 2
             while count >= 0:
                 count = count - 1
                 pokemon_info_db = Pokemon(
@@ -117,7 +116,7 @@ def pokemon_height_weight(id_pokemon):
 
 
 def get_pokemon_stats(id_pokemon):
-    """Returns a list with the stats of the pokemos in the chain"""
+    """Returns a list with the stats of the pokemon in the chain"""
     all_stats = []
     pokemon_stats = []
     num_stats = 5
@@ -136,9 +135,9 @@ def get_pokemon_stats(id_pokemon):
     return pokemon_stats
 
 
-def take_list_first_item(lista):
+def take_list_first_item(any_list):
     """It returns the first item on a nested list """
     list2 = []
-    for item in lista:
+    for item in any_list:
         list2.append(item[0])
     return list2
