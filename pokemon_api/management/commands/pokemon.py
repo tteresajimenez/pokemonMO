@@ -2,10 +2,10 @@ from django.core.management.base import BaseCommand, CommandError
 import re
 import requests
 import pprint
-from pokemon_api.models import Pokemon
+from pokemon_api.models import Pokemon, Stats, EvolutionChain
 
-url_evolution = "https://pokeapi.co/api/v2/evolution-chain/"
-url_pokemon = "https://pokeapi.co/api/v2/pokemon/"
+URL_EVOLUTION = "https://pokeapi.co/api/v2/evolution-chain/"
+URL_POKEMON = "https://pokeapi.co/api/v2/pokemon/"
 
 
 class Command(BaseCommand):
@@ -16,55 +16,82 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if int(options['id_input']):
-            pokemon_evolution_url = url_evolution + str(options['id_input'])
-            data = requests.get(pokemon_evolution_url).json()
-            chain = data.get("chain")
-            pokemon_list, pokemon_url = get_pokemon_evolution(chain)
-            id_pokemon = take_pokemon_id(pokemon_url)
-            evolves_to = pokemon_evolves(pokemon_list)
-            pokemon_height, pokemon_weight = pokemon_height_weight(id_pokemon)
-            pokemon_stats = get_pokemon_stats(id_pokemon)
-            poke_stats1, poke_stats2, poke_stats3 = pokemon_stats[0], pokemon_stats[1], pokemon_stats[2]
-            poke_stats1 = take_list_first_item(poke_stats1), take_list_first_item(poke_stats2), take_list_first_item(
-                poke_stats3)
-
-            # Info that is show on the console
-            count = 2
-            while count >= 0:
-                count = count - 1
-                pokemon_info = {
-                    'id_pokemon': id_pokemon[count],
-                    'name': pokemon_list[count],
-                    'weight': pokemon_weight[count],
-                    'height': pokemon_height[count],
-                    'stats': pokemon_stats[count],
-                    'evolution': evolves_to[count]
-                }
-                pprint.pprint(pokemon_info)
-
-            # Adding information into de DB
-            while count >= 0:
-                count = count - 1
-                pokemon_info_db = Pokemon(
-                    id_pokemon=id_pokemon[count],
-                    name=pokemon_list[count],
-                    weight=pokemon_weight[count],
-                    height=pokemon_height[count],
-                    speed=poke_stats1[count][0],
-                    special_defense=poke_stats1[count][1],
-                    special_attack=poke_stats1[count][2],
-                    defense=poke_stats1[count][3],
-                    attack=poke_stats1[count][4],
-                    hp=poke_stats1[count][5],
-                    evolution=evolves_to[count]
-                )
-                pokemon_info_db.save()
-                # print('Save with success')
+            chain_id = str(options['id_input'])
+            save_pokemon_info(chain_id)
         else:
             raise CommandError('Please insert a number')
 
 
-def get_pokemon_evolution(chain):
+def save_pokemon_info(chain_id):
+    """Main funtion that shows and saves the pokemon information"""
+    pokemon_evolution_url = URL_EVOLUTION + chain_id
+    data = requests.get(pokemon_evolution_url).json()
+    chain = data.get("chain")
+    pokemon_list, pokemon_url = get_pokemon_name_and_url(chain)
+    id_pokemon = take_pokemon_id(pokemon_url)
+    pokemon_height, pokemon_weight = pokemon_height_weight(id_pokemon)
+    id_evolution = fill_id_evolution_chain(id_pokemon,data)
+    pokemon_stats = get_pokemon_stats(id_pokemon)
+
+    value_stats = []
+    for item in pokemon_stats:
+        value_stats.append(take_list_first_item(item))
+
+    pokemon_number_in_chain = len(id_pokemon)
+    print(id_evolution)
+    evolution_instance = EvolutionChain(
+        id_evolution_chain=data['id'],
+        name_poke='hello'
+    )
+    evolution_instance.save()
+    try:
+        while pokemon_number_in_chain >= 1:
+            pokemon_number_in_chain -= 1
+
+            pokemon_instance = Pokemon(
+                id_pokemon=id_pokemon[pokemon_number_in_chain],
+                id_evolution_fk=evolution_instance,
+                name=pokemon_list[pokemon_number_in_chain],
+                weight=pokemon_weight[pokemon_number_in_chain],
+                height=pokemon_height[pokemon_number_in_chain]
+            )
+            pokemon_instance.save()
+
+            stats_instance = Stats(
+                id_pokemon_fk=pokemon_instance,
+                speed=pokemon_stats[pokemon_number_in_chain][0],
+                special_defense=value_stats[pokemon_number_in_chain][1],
+                special_attack=value_stats[pokemon_number_in_chain][2],
+                defense=value_stats[pokemon_number_in_chain][3],
+                attack=value_stats[pokemon_number_in_chain][4],
+                hp=value_stats[pokemon_number_in_chain][5]
+            )
+            stats_instance.save()
+    except:
+        print('ERROR that pokemon is already save on db')
+    else:
+        print('Success')
+
+    while pokemon_number_in_chain >= 0:
+        pokemon_number_in_chain = pokemon_number_in_chain - 1
+        pokemon_info = {
+            'id_pokemon': id_pokemon[pokemon_number_in_chain],
+            'name': pokemon_list[pokemon_number_in_chain],
+            'weight': pokemon_weight[pokemon_number_in_chain],
+            'height': pokemon_height[pokemon_number_in_chain],
+            'evolution_chain': data['id'],
+            'stats': { 'speed': value_stats[pokemon_number_in_chain][0],
+                       'special_defense': value_stats[pokemon_number_in_chain][1],
+                       'special_attack': value_stats[pokemon_number_in_chain][2],
+                       'defense': value_stats[pokemon_number_in_chain][3],
+                       'attack': value_stats[pokemon_number_in_chain][4],
+                       'hp': value_stats[pokemon_number_in_chain][5],
+            }
+
+        }
+        pprint.pprint(pokemon_info)
+
+def get_pokemon_name_and_url(chain):
     """Returns two lists: name and the url of the pokemons in the evolution chain"""
     pokemon_name = [chain.get("species").get("name")]
     pokemon_url = [chain.get("species").get("url")]
@@ -93,22 +120,12 @@ def take_pokemon_id(pokemon_url):
     return id_list
 
 
-def pokemon_evolves(pokemon_list):
-    """It returns a list with the names of the pokemon in the order that is next on the evolution chain"""
-    evolves_to = []
-    for item in reversed(pokemon_list):
-        evolves_to.append(item)
-    evolves_to[2] = 'None'
-    evolves_to[0], evolves_to[1] = evolves_to[1], evolves_to[0]
-    return evolves_to
-
-
 def pokemon_height_weight(id_pokemon):
     """Returns a list of heights and weights of the pokemons"""
     pokemon_height = []
     pokemon_weight = []
     for item in id_pokemon:
-        pokemon_characteristics_url = url_pokemon + item
+        pokemon_characteristics_url = URL_POKEMON + item
         data = requests.get(pokemon_characteristics_url).json()
         pokemon_height.append(data['height'])
         pokemon_weight.append(data['weight'])
@@ -121,7 +138,7 @@ def get_pokemon_stats(id_pokemon):
     pokemon_stats = []
     num_stats = 5
     for item in id_pokemon:
-        pokemon_characteristics_url = url_pokemon + item
+        pokemon_characteristics_url = URL_POKEMON + item
         data = requests.get(pokemon_characteristics_url).json()
         all_stats.append(data.get("stats"))
         num_stats = 5
@@ -130,10 +147,15 @@ def get_pokemon_stats(id_pokemon):
             pokemon_stats.append(data['stats'][num_stats]['stat']['name'])
             num_stats = num_stats - 1
 
-    pokemon_stats = [pokemon_stats[i * len(pokemon_stats) // 18: (i + 1) * len(pokemon_stats) // 18] for i in range(18)]
-    pokemon_stats = [pokemon_stats[i * len(pokemon_stats) // 3: (i + 1) * len(pokemon_stats) // 3] for i in range(3)]
+        # It creates sublist based on the stats and their value
+    pokemon_stats = [pokemon_stats[
+                     i * len(pokemon_stats) // (len(pokemon_stats) // 2): (i + 1) * len(pokemon_stats) // (
+                                 len(pokemon_stats) // 2)] for i in range((len(pokemon_stats) // 2))]
+    # It creates 3 different lists
+    pokemon_stats = [
+        pokemon_stats[i * len(pokemon_stats) // (len(id_pokemon)): (i + 1) * len(pokemon_stats) // (len(id_pokemon))]
+        for i in range(len(id_pokemon))]
     return pokemon_stats
-
 
 def take_list_first_item(any_list):
     """It returns the first item on a nested list """
@@ -141,3 +163,11 @@ def take_list_first_item(any_list):
     for item in any_list:
         list2.append(item[0])
     return list2
+
+def fill_id_evolution_chain(id_pokemon, data):
+    id_evolution = []
+    VARIABLE_TO_ITERATE = len(id_pokemon)
+    while VARIABLE_TO_ITERATE >= 1:
+        VARIABLE_TO_ITERATE -= 1
+        id_evolution.append(data['id'])
+    return id_evolution

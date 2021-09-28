@@ -6,9 +6,19 @@
   <component name="ChangeListManager">
     <list default="true" id="43ac77a3-5e2e-48ad-9c08-021465a6ca4e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pokemon_api/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/pokemon_api/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pokemon_api/management/commands/pokemon.py" beforeDir="false" afterPath="$PROJECT_DIR$/pokemon_api/management/commands/pokemon.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pokemon_api/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pokemon_api/migrations/0002_auto_20210922_1556.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pokemon_api/migrations/0003_auto_20210922_1606.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pokemon_api/migrations/__init__.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pokemon_api/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/pokemon_api/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pokemon_api/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/pokemon_api/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pokemon_api/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/pokemon_api/tests.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pokemon_api/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/pokemon_api/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pokemon_statement/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/pokemon_statement/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test2.py" beforeDir="false" afterPath="$PROJECT_DIR$/test2.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +34,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectId" id="1ySsfFywifSBaTPDcjeVU4RXSf1" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />

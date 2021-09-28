@@ -121,5 +121,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-#Esto lo agregamos para agregar el modulo
+#Esto lo agregamos para agregar el modelo
 POKEMON_MODEL = 'pokemon_api.Pokemon'
+STATS_MODEL = 'pokemon_api.Stats'
+EVOLUTION_MODEL = 'pokemon_api.EvolutionChain'

@@ -53,7 +53,8 @@ def main():
             'hp': poke_stats1[count][5],
             'evolution': evolves_to[count]
         }
-        pprint.pprint(pokemon_info_db)
+        #pprint.pprint(pokemon_info_db)
+    pprint.pprint(pokemon_stats)
 
 
 def get_pokemon_evolution(chain):
